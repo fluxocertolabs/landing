@@ -315,109 +315,119 @@ export function App() {
           className="h-px w-full bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.10),transparent)]"
         />
 
-        <section id="recursos" className="py-14 sm:py-18">
-          <Container>
-            <Reveal>
-              <div className="text-sm font-semibold text-white/90">Recursos</div>
-              <h2 className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight">
-                O que faz o FluxoCerto ser diferente
-              </h2>
-              <p className="mt-3 text-sm sm:text-base text-[color:var(--color-muted-foreground)] max-w-2xl">
-                A maioria dos apps assume que sua renda é certa. Aqui, você enxerga o melhor e o pior cenário e decide com dados.
-              </p>
-            </Reveal>
+        {/* Darker background block to visually separate Recursos + Preço from the rest. */}
+        <div className="relative overflow-hidden">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.28),rgba(0,0,0,0.40))]"
+          />
 
-            <div className="mt-8 grid gap-4 md:grid-cols-2">
-              <Reveal delay={0.02}>
-                <Feature
-                  icon={<Layers className="h-5 w-5 text-[color:var(--color-brand-blue)]" aria-hidden="true" />}
-                  title="Dois cenários (otimista e pessimista)"
-                  desc="Compare o cenário que inclui toda renda com o cenário só de renda garantida."
-                />
-              </Reveal>
-              <Reveal delay={0.06}>
-                <Feature
-                  icon={<TrendingDown className="h-5 w-5 text-[color:var(--color-brand-blue)]" aria-hidden="true" />}
-                  title="Dias de risco destacados"
-                  desc="O app sinaliza automaticamente os dias em que o saldo projetado pode ficar abaixo de zero."
-                />
-              </Reveal>
-              <Reveal delay={0.1}>
-                <Feature
-                  icon={<CalendarClock className="h-5 w-5 text-[color:var(--color-brand-blue)]" aria-hidden="true" />}
-                  title="Projeção 30/60/90 dias"
-                  desc="Planeje no horizonte certo para você e veja o fluxo diário, sem planilhas."
-                />
-              </Reveal>
-              <Reveal delay={0.14}>
-                <Feature
-                  icon={<ShieldCheck className="h-5 w-5 text-[color:var(--color-brand-blue)]" aria-hidden="true" />}
-                  title="Pensado para grupos"
-                  desc="Centralize a visão do grupo e tome decisões juntos, com menos ansiedade e mais clareza."
-                />
-              </Reveal>
-            </div>
-          </Container>
-        </section>
+          <div className="relative">
+            <section id="recursos" className="py-14 sm:py-18">
+              <Container>
+                <Reveal>
+                  <div className="text-sm font-semibold text-white/90">Recursos</div>
+                  <h2 className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight">
+                    O que faz o FluxoCerto ser diferente
+                  </h2>
+                  <p className="mt-3 text-sm sm:text-base text-[color:var(--color-muted-foreground)] max-w-2xl">
+                    A maioria dos apps assume que sua renda é certa. Aqui, você enxerga o melhor e o pior cenário e decide com dados.
+                  </p>
+                </Reveal>
 
-        <section id="preco" className="py-14 sm:py-18 fc-price-bg">
-          <Container>
-            <div className="grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-start">
-              <Reveal>
-                <div className="text-sm font-semibold text-white/90">Preço</div>
-                <h2 className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight">
-                  Simples: um plano, acesso completo
-                </h2>
-                <p className="mt-3 text-sm sm:text-base text-[color:var(--color-muted-foreground)] max-w-2xl">
-                  Sem pegadinhas, sem dezenas de tiers. Teste por {PRICING.trialDays} dias e veja se substitui sua planilha.
-                </p>
-              </Reveal>
-
-              <Reveal delay={0.06}>
-                <div className="rounded-3xl border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.04))] p-6 shadow-[0_30px_90px_rgba(0,0,0,0.38)]">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <div className="text-sm font-semibold">Plano Único</div>
-                      <div className="mt-1 text-sm text-[color:var(--color-muted-foreground)]">
-                        Tudo que você precisa para projetar e agir.
-                      </div>
-                    </div>
-                    <span className="rounded-full bg-[rgba(64,181,232,0.16)] text-[color:var(--color-brand-blue)] px-3 py-1 text-xs font-medium border border-white/10">
-                      {PRICING.trialDays} dias grátis
-                    </span>
-                  </div>
-
-                  <div className="mt-6">
-                    <div className="text-4xl font-semibold tracking-tight">{PRICING.priceBRL}</div>
-                    <div className="mt-1 text-sm text-[color:var(--color-muted-foreground)]">{PRICING.period}</div>
-                  </div>
-
-                  <div className="mt-6 grid gap-3">
-                    {[
-                      'Projeção 30/60/90 dias',
-                      'Dois cenários: otimista e pessimista',
-                      'Dias de risco destacados',
-                      'Ritual de atualização rápida',
-                      'Cancele quando quiser',
-                    ].map((t) => (
-                      <div key={t} className="flex items-start gap-2 text-sm text-white/85">
-                        <Check className="h-4 w-4 mt-0.5 text-emerald-300" aria-hidden="true" />
-                        <span>{t}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-7">
-                    <CtaButtons />
-                    <div className="mt-3 text-xs text-white/60">
-                      Após o teste, a assinatura segue automaticamente. Você pode cancelar a qualquer momento.
-                    </div>
-                  </div>
+                <div className="mt-8 grid gap-4 md:grid-cols-2">
+                  <Reveal delay={0.02}>
+                    <Feature
+                      icon={<Layers className="h-5 w-5 text-[color:var(--color-brand-blue)]" aria-hidden="true" />}
+                      title="Dois cenários (otimista e pessimista)"
+                      desc="Compare o cenário que inclui toda renda com o cenário só de renda garantida."
+                    />
+                  </Reveal>
+                  <Reveal delay={0.06}>
+                    <Feature
+                      icon={<TrendingDown className="h-5 w-5 text-[color:var(--color-brand-blue)]" aria-hidden="true" />}
+                      title="Dias de risco destacados"
+                      desc="O app sinaliza automaticamente os dias em que o saldo projetado pode ficar abaixo de zero."
+                    />
+                  </Reveal>
+                  <Reveal delay={0.1}>
+                    <Feature
+                      icon={<CalendarClock className="h-5 w-5 text-[color:var(--color-brand-blue)]" aria-hidden="true" />}
+                      title="Projeção 30/60/90 dias"
+                      desc="Planeje no horizonte certo para você e veja o fluxo diário, sem planilhas."
+                    />
+                  </Reveal>
+                  <Reveal delay={0.14}>
+                    <Feature
+                      icon={<ShieldCheck className="h-5 w-5 text-[color:var(--color-brand-blue)]" aria-hidden="true" />}
+                      title="Pensado para grupos"
+                      desc="Centralize a visão do grupo e tome decisões juntos, com menos ansiedade e mais clareza."
+                    />
+                  </Reveal>
                 </div>
-              </Reveal>
-            </div>
-          </Container>
-        </section>
+              </Container>
+            </section>
+
+            <section id="preco" className="py-14 sm:py-18">
+              <Container>
+                <div className="grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-start">
+                  <Reveal>
+                    <div className="text-sm font-semibold text-white/90">Preço</div>
+                    <h2 className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight">
+                      Simples: um plano, acesso completo
+                    </h2>
+                    <p className="mt-3 text-sm sm:text-base text-[color:var(--color-muted-foreground)] max-w-2xl">
+                      Sem pegadinhas, sem dezenas de tiers. Teste por {PRICING.trialDays} dias e veja se substitui sua planilha.
+                    </p>
+                  </Reveal>
+
+                  <Reveal delay={0.06}>
+                    <div className="rounded-3xl border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.04))] p-6 shadow-[0_30px_90px_rgba(0,0,0,0.38)]">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <div className="text-sm font-semibold">Plano Único</div>
+                          <div className="mt-1 text-sm text-[color:var(--color-muted-foreground)]">
+                            Tudo que você precisa para projetar e agir.
+                          </div>
+                        </div>
+                        <span className="rounded-full bg-[rgba(64,181,232,0.16)] text-[color:var(--color-brand-blue)] px-3 py-1 text-xs font-medium border border-white/10">
+                          {PRICING.trialDays} dias grátis
+                        </span>
+                      </div>
+
+                      <div className="mt-6">
+                        <div className="text-4xl font-semibold tracking-tight">{PRICING.priceBRL}</div>
+                        <div className="mt-1 text-sm text-[color:var(--color-muted-foreground)]">{PRICING.period}</div>
+                      </div>
+
+                      <div className="mt-6 grid gap-3">
+                        {[
+                          'Projeção 30/60/90 dias',
+                          'Dois cenários: otimista e pessimista',
+                          'Dias de risco destacados',
+                          'Ritual de atualização rápida',
+                          'Cancele quando quiser',
+                        ].map((t) => (
+                          <div key={t} className="flex items-start gap-2 text-sm text-white/85">
+                            <Check className="h-4 w-4 mt-0.5 text-emerald-300" aria-hidden="true" />
+                            <span>{t}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="mt-7">
+                        <CtaButtons />
+                        <div className="mt-3 text-xs text-white/60">
+                          Após o teste, a assinatura segue automaticamente. Você pode cancelar a qualquer momento.
+                        </div>
+                      </div>
+                    </div>
+                  </Reveal>
+                </div>
+              </Container>
+            </section>
+          </div>
+        </div>
 
         <div
           aria-hidden="true"
