@@ -41,7 +41,18 @@
   --fc-grain-dot: rgba(11, 16, 32, 0.06);
 
   --color-primary: var(--color-brand-blue);
-  --color-primary-foreground: #071018;
+  --color-primary-foreground: #ffffff;
+
+  /* UI component tokens */
+  --fc-badge-bg: rgba(3, 105, 161, 0.12);
+  --fc-badge-fg: #075985;
+  --fc-badge-border: rgba(3, 105, 161, 0.22);
+  --fc-badge-shadow: rgba(11, 16, 32, 0.08);
+
+  --fc-btn-secondary-bg: rgba(255, 255, 255, 0.78);
+  --fc-btn-secondary-hover-bg: rgba(255, 255, 255, 0.92);
+  --fc-btn-secondary-border: rgba(11, 16, 32, 0.14);
+  --fc-btn-secondary-shadow: rgba(11, 16, 32, 0.12);
 
   --radius: 0.9rem;
 }
@@ -77,10 +88,29 @@ html.dark {
   --fc-glow-indigo: rgba(99, 102, 241, 0.16);
   --fc-glow-emerald: rgba(16, 185, 129, 0.10);
   --fc-grain-dot: rgba(255, 255, 255, 0.06);
+
+  --color-primary-foreground: #ffffff;
+
+  /* UI component tokens */
+  --fc-badge-bg: rgba(64, 181, 232, 0.16);
+  --fc-badge-fg: var(--color-brand-blue);
+  --fc-badge-border: rgba(255, 255, 255, 0.14);
+  --fc-badge-shadow: rgba(0, 0, 0, 0.22);
+
+  --fc-btn-secondary-bg: var(--color-surface-3);
+  --fc-btn-secondary-hover-bg: var(--color-surface-4);
+  --fc-btn-secondary-border: var(--color-border);
+  --fc-btn-secondary-shadow: rgba(0, 0, 0, 0.18);
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Avoid horizontal scroll caused by large blurred glows; keep shadows visible by not clipping per-section. */
+html,
+body {
+  overflow-x: hidden;
 }
 
 /* Theme-aware logo swap (do NOT rely on Tailwind's `dark:` variant to avoid media/class mismatches) */

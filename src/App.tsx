@@ -176,7 +176,7 @@ export function App() {
         <div className="relative fc-top-bg">
           <div aria-hidden="true" className="pointer-events-none absolute inset-0 fc-grain opacity-[0.35]" />
 
-          <section className="relative overflow-hidden">
+          <section className="relative">
             <Container className="pt-14 sm:pt-20 pb-10 sm:pb-12">
               <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
                 <div>
@@ -418,7 +418,7 @@ export function App() {
                             Tudo que você precisa para projetar e agir.
                           </div>
                         </div>
-                        <span className="rounded-full bg-[rgba(64,181,232,0.14)] text-[color:var(--color-brand-blue)] px-3 py-1 text-xs font-medium border border-[color:var(--color-border)]">
+                        <span className="rounded-full bg-[color:var(--fc-badge-bg)] text-[color:var(--fc-badge-fg)] px-3 py-1 text-xs font-semibold border border-[color:var(--fc-badge-border)] shadow-[0_8px_22px_var(--fc-badge-shadow)]">
                           {PRICING.trialDays} dias grátis
                         </span>
                       </div>
