@@ -6,13 +6,18 @@ type Props = {
 
 export function Logo({ className }: Props) {
   return (
-    <div className={cn('flex items-center', className)}>
+    <div className={cn('flex items-center', className)} aria-label="FluxoCerto">
       <img
-        src="/brand/symbol.svg"
-        width={28}
-        height={28}
+        src="/brand/logo-light.svg"
         alt="FluxoCerto"
-        className="h-7 w-7"
+        height={28}
+        className="fc-logo-light h-7 w-auto"
+      />
+      <img
+        src="/brand/logo-dark.svg"
+        alt="FluxoCerto"
+        height={28}
+        className="fc-logo-dark h-7 w-auto"
       />
     </div>
   )

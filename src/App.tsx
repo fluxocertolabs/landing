@@ -13,6 +13,7 @@ import { Button } from '@/components/button'
 import { Reveal } from '@/components/reveal'
 import { Logo } from '@/components/logo'
 import { HeroProjectionChart } from '@/components/hero-projection-chart'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { cn } from '@/lib/cn'
 import { LINKS, PRICING, PRODUCT } from '@/content'
 
@@ -24,7 +25,7 @@ function Container({ className, children }: { className?: string; children: Reac
 
 function Pill({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/6 px-3 py-1 text-xs text-white/85">
+    <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-2)] px-3 py-1 text-xs text-[color:var(--color-dim-foreground)]">
       <Sparkles className="h-3.5 w-3.5 text-[color:var(--color-brand-blue)]" aria-hidden="true" />
       {children}
     </span>
@@ -33,9 +34,9 @@ function Pill({ children }: { children: React.ReactNode }) {
 
 function Feature({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-[color:var(--color-card)] p-5 shadow-[0_10px_50px_rgba(0,0,0,0.25)]">
+    <div className="rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-card)] p-5 shadow-[0_10px_50px_rgba(0,0,0,0.16)]">
       <div className="flex items-start gap-3">
-        <div className="mt-0.5 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/7 border border-white/10">
+        <div className="mt-0.5 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[color:var(--color-surface-2)] border border-[color:var(--color-border)]">
           {icon}
         </div>
         <div>
@@ -49,7 +50,7 @@ function Feature({ icon, title, desc }: { icon: React.ReactNode; title: string; 
 
 function FaqItem({ q, a }: { q: string; a: string }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+    <div className="rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface-1)] p-5">
       <div className="text-sm font-semibold">{q}</div>
       <div className="mt-2 text-sm text-[color:var(--color-muted-foreground)]">{a}</div>
     </div>
@@ -90,6 +91,28 @@ function CtaButtons() {
   )
 }
 
+function SingleCtaButton() {
+  const hasAppUrl = LINKS.appUrl.trim().length > 0
+
+  return (
+    <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+      {hasAppUrl ? (
+        <a href={LINKS.appUrl}>
+          <Button size="lg">
+            Começar teste grátis
+            <ArrowRight className="h-4 w-4 opacity-90" aria-hidden="true" />
+          </Button>
+        </a>
+      ) : (
+        <Button size="lg" disabled title="Defina VITE_APP_URL para habilitar o botão">
+          Começar teste grátis
+          <ArrowRight className="h-4 w-4 opacity-90" aria-hidden="true" />
+        </Button>
+      )}
+    </div>
+  )
+}
+
 function HeroCtaButton() {
   const hasAppUrl = LINKS.appUrl.trim().length > 0
 
@@ -117,7 +140,7 @@ export function App() {
 
   return (
     <div id="top" className="min-h-screen">
-      <header className="sticky top-0 z-20 border-b border-white/6 bg-black/15 backdrop-blur">
+      <header className="sticky top-0 z-20 border-b border-[color:var(--color-border-soft)] bg-[color:var(--color-header)] backdrop-blur">
         <Container className="flex items-center justify-between py-4 sm:py-5">
           <a
             href="#top"
@@ -126,22 +149,24 @@ export function App() {
           >
             <Logo />
           </a>
-          <nav className="hidden md:flex items-center gap-6 text-sm text-white/80">
-            <a className="hover:text-white" href="#como-funciona">
+          <nav className="hidden md:flex items-center gap-6 text-sm text-[color:var(--color-dim-foreground)]">
+            <a className="hover:text-[color:var(--color-foreground)]" href="#como-funciona">
               Como funciona
             </a>
-            <a className="hover:text-white" href="#recursos">
+            <a className="hover:text-[color:var(--color-foreground)]" href="#recursos">
               Recursos
             </a>
-            <a className="hover:text-white" href="#preco">
+            <a className="hover:text-[color:var(--color-foreground)]" href="#preco">
               Preço
             </a>
-            <a className="hover:text-white" href="#faq">
+            <a className="hover:text-[color:var(--color-foreground)]" href="#faq">
               FAQ
             </a>
           </nav>
-          <div className="hidden sm:block">
-            <CtaButtons />
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:block">
+              <CtaButtons />
+            </div>
           </div>
         </Container>
       </header>
@@ -191,7 +216,10 @@ export function App() {
                   <div className="mt-8 grid gap-3 sm:grid-cols-3">
                     {[{ t: '2 cenários', d: 'Otimista e pessimista' }, { t: 'Dias de risco', d: 'Avisos antes do negativo' }, { t: 'Ritual mensal', d: 'Atualize em minutos' }].map(
                       (item) => (
-                        <div key={item.t} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <div
+                          key={item.t}
+                          className="rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface-1)] p-4"
+                        >
                           <div className="text-sm font-semibold">{item.t}</div>
                           <div className="mt-1 text-xs text-[color:var(--color-muted-foreground)]">{item.d}</div>
                         </div>
@@ -207,33 +235,33 @@ export function App() {
                     <div className="fc-float absolute right-14 bottom-6 h-44 w-44 rounded-full bg-[rgba(16,185,129,0.16)] blur-3xl" style={{ animationDelay: '1.6s' }} />
                   </div>
 
-                  <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_30px_90px_rgba(0,0,0,0.38)]">
+                  <div className="rounded-3xl border border-[color:var(--color-border)] bg-[color:var(--color-surface-1)] p-6 shadow-[0_30px_90px_rgba(0,0,0,0.22)]">
                     <div className="text-sm font-semibold">Seu próximo mês, em um olhar</div>
                     <div className="mt-1 text-sm text-[color:var(--color-muted-foreground)]">
                       Duas projeções para tomar decisões sem depender de “torcer pra cair”.
                     </div>
 
-                    <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-4">
-                      <div className="flex items-center justify-between text-xs text-white/70">
+                    <div className="mt-6 rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-inset)] p-4">
+                      <div className="flex items-center justify-between text-xs text-[color:var(--color-dim-foreground)]">
                         <span className="inline-flex items-center gap-2">
                           <span
-                            className="h-2.5 w-2.5 rounded-full bg-emerald-400/90 ring-1 ring-white/15"
+                            className="h-2.5 w-2.5 rounded-full bg-emerald-400/90 ring-1 ring-[color:var(--color-border)]"
                             aria-hidden="true"
                           />
                           Otimista
                         </span>
                         <span className="inline-flex items-center gap-2">
                           <span
-                            className="h-2.5 w-2.5 rounded-full bg-amber-400/90 ring-1 ring-white/15"
+                            className="h-2.5 w-2.5 rounded-full bg-amber-400/90 ring-1 ring-[color:var(--color-border)]"
                             aria-hidden="true"
                           />
                           Pessimista
                         </span>
                       </div>
-                      <div className="mt-3 h-28 overflow-hidden rounded-xl border border-white/10 bg-[linear-gradient(180deg,rgba(64,181,232,0.12),rgba(0,0,0,0))]">
+                      <div className="mt-3 h-28 overflow-hidden rounded-xl border border-[color:var(--color-border)] bg-[linear-gradient(180deg,rgba(64,181,232,0.10),rgba(0,0,0,0))]">
                         <HeroProjectionChart className="h-full w-full" />
                       </div>
-                      <div className="mt-3 flex items-start gap-2 text-xs text-white/70">
+                      <div className="mt-3 flex items-start gap-2 text-xs text-[color:var(--color-dim-foreground)]">
                         <CircleAlert className="h-4 w-4 text-amber-300" aria-hidden="true" />
                         <span>
                           Dias de risco aparecem quando o saldo projetado pode ficar <b>negativo</b>.
@@ -242,11 +270,11 @@ export function App() {
                     </div>
 
                     <div className="mt-4 grid gap-3">
-                      <div className="flex items-start gap-2 text-sm text-white/80">
+                      <div className="flex items-start gap-2 text-sm text-[color:var(--color-dim-foreground)]">
                         <ShieldCheck className="h-4 w-4 mt-0.5 text-[color:var(--color-brand-blue)]" aria-hidden="true" />
                         <span>Sem categorizar transações. Foco em projeção.</span>
                       </div>
-                      <div className="flex items-start gap-2 text-sm text-white/80">
+                      <div className="flex items-start gap-2 text-sm text-[color:var(--color-dim-foreground)]">
                         <ShieldCheck className="h-4 w-4 mt-0.5 text-[color:var(--color-brand-blue)]" aria-hidden="true" />
                         <span>Feito para grupos com renda variável (freela, PJ, comissão).</span>
                       </div>
@@ -260,7 +288,7 @@ export function App() {
           <section id="como-funciona" className="pt-10 pb-14 sm:pt-12 sm:pb-18">
             <Container>
               <Reveal>
-                <div className="text-sm font-semibold text-white/90">Como funciona</div>
+                <div className="text-sm font-semibold text-[color:var(--color-foreground)]">Como funciona</div>
                 <h2 className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight">
                   Um ritual mensal simples. Clareza para o mês todo.
                 </h2>
@@ -272,7 +300,7 @@ export function App() {
 
               <div className="mt-8 grid gap-4 md:grid-cols-3">
                 <Reveal delay={0.05}>
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+                  <div className="rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface-1)] p-6">
                     <div className="flex items-center gap-2 text-sm font-semibold">
                       <Layers className="h-4 w-4 text-[color:var(--color-brand-blue)]" aria-hidden="true" />
                       1) Cadastre o básico
@@ -283,7 +311,7 @@ export function App() {
                   </div>
                 </Reveal>
                 <Reveal delay={0.1}>
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+                  <div className="rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface-1)] p-6">
                     <div className="flex items-center gap-2 text-sm font-semibold">
                       <CalendarClock className="h-4 w-4 text-[color:var(--color-brand-blue)]" aria-hidden="true" />
                       2) Atualize em minutos
@@ -294,7 +322,7 @@ export function App() {
                   </div>
                 </Reveal>
                 <Reveal delay={0.15}>
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+                  <div className="rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface-1)] p-6">
                     <div className="flex items-center gap-2 text-sm font-semibold">
                       <TrendingDown className="h-4 w-4 text-[color:var(--color-brand-blue)]" aria-hidden="true" />
                       3) Antecipe dias de risco
@@ -312,21 +340,21 @@ export function App() {
         {/* Background break after "Como funciona" (divider only, keep background continuous) */}
         <div
           aria-hidden="true"
-          className="h-px w-full bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.10),transparent)]"
+          className="h-px w-full bg-[linear-gradient(90deg,transparent,var(--color-divider),transparent)]"
         />
 
         {/* Darker background block to visually separate Recursos + Preço from the rest. */}
         <div className="relative overflow-hidden">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.28),rgba(0,0,0,0.40))]"
+            className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,var(--color-overlay),var(--color-overlay))]"
           />
 
           <div className="relative">
             <section id="recursos" className="py-14 sm:py-18">
               <Container>
                 <Reveal>
-                  <div className="text-sm font-semibold text-white/90">Recursos</div>
+                  <div className="text-sm font-semibold text-[color:var(--color-foreground)]">Recursos</div>
                   <h2 className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight">
                     O que faz o FluxoCerto ser diferente
                   </h2>
@@ -372,7 +400,7 @@ export function App() {
               <Container>
                 <div className="grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-start">
                   <Reveal>
-                    <div className="text-sm font-semibold text-white/90">Preço</div>
+                    <div className="text-sm font-semibold text-[color:var(--color-foreground)]">Preço</div>
                     <h2 className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight">
                       Simples: um plano, acesso completo
                     </h2>
@@ -382,7 +410,7 @@ export function App() {
                   </Reveal>
 
                   <Reveal delay={0.06}>
-                    <div className="rounded-3xl border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.04))] p-6 shadow-[0_30px_90px_rgba(0,0,0,0.38)]">
+                    <div className="rounded-3xl border border-[color:var(--color-border)] bg-[linear-gradient(180deg,var(--color-surface-3),var(--color-surface-1))] p-6 shadow-[0_30px_90px_rgba(0,0,0,0.22)]">
                       <div className="flex items-start justify-between gap-4">
                         <div>
                           <div className="text-sm font-semibold">Plano Único</div>
@@ -390,7 +418,7 @@ export function App() {
                             Tudo que você precisa para projetar e agir.
                           </div>
                         </div>
-                        <span className="rounded-full bg-[rgba(64,181,232,0.16)] text-[color:var(--color-brand-blue)] px-3 py-1 text-xs font-medium border border-white/10">
+                        <span className="rounded-full bg-[rgba(64,181,232,0.14)] text-[color:var(--color-brand-blue)] px-3 py-1 text-xs font-medium border border-[color:var(--color-border)]">
                           {PRICING.trialDays} dias grátis
                         </span>
                       </div>
@@ -408,7 +436,7 @@ export function App() {
                           'Ritual de atualização rápida',
                           'Cancele quando quiser',
                         ].map((t) => (
-                          <div key={t} className="flex items-start gap-2 text-sm text-white/85">
+                          <div key={t} className="flex items-start gap-2 text-sm text-[color:var(--color-dim-foreground)]">
                             <Check className="h-4 w-4 mt-0.5 text-emerald-300" aria-hidden="true" />
                             <span>{t}</span>
                           </div>
@@ -416,8 +444,8 @@ export function App() {
                       </div>
 
                       <div className="mt-7">
-                        <CtaButtons />
-                        <div className="mt-3 text-xs text-white/60">
+                        <SingleCtaButton />
+                        <div className="mt-3 text-xs text-[color:var(--color-faint-foreground)]">
                           Após o teste, a assinatura segue automaticamente. Você pode cancelar a qualquer momento.
                         </div>
                       </div>
@@ -431,13 +459,13 @@ export function App() {
 
         <div
           aria-hidden="true"
-          className="h-px w-full bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.10),transparent)]"
+          className="h-px w-full bg-[linear-gradient(90deg,transparent,var(--color-divider),transparent)]"
         />
 
         <section id="faq" className="py-14 sm:py-18">
           <Container>
             <Reveal>
-              <div className="text-sm font-semibold text-white/90">FAQ</div>
+              <div className="text-sm font-semibold text-[color:var(--color-foreground)]">FAQ</div>
               <h2 className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight">
                 Perguntas frequentes
               </h2>
@@ -474,43 +502,32 @@ export function App() {
             </div>
 
             <Reveal delay={0.16}>
-              <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-7 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+              <div className="mt-10 rounded-3xl border border-[color:var(--color-border)] bg-[color:var(--color-surface-1)] p-7 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                 <div>
                   <div className="text-lg font-semibold">Pronto para trocar planilhas por clareza?</div>
                   <div className="mt-1 text-sm text-[color:var(--color-muted-foreground)]">
                     Comece com {PRICING.trialDays} dias grátis. Leva poucos minutos para ver sua primeira projeção.
                   </div>
                 </div>
-                <CtaButtons />
+                <SingleCtaButton />
               </div>
             </Reveal>
           </Container>
         </section>
 
-        <section className="py-10">
-          <Container>
-            <div className="flex items-start gap-2 text-xs text-white/55">
-              <CircleAlert className="h-4 w-4 mt-0.5" aria-hidden="true" />
-              <p>
-                Observação: este site descreve os recursos principais do FluxoCerto (projeção de fluxo de caixa, dois cenários e dias de risco).
-                Integrações como sincronização bancária não fazem parte da proposta.
-              </p>
-            </div>
-          </Container>
-        </section>
+        {/* Removed "Observação" section per request */}
       </main>
 
-      <footer className="border-t border-white/6 bg-black/15">
+      <footer className="border-t border-[color:var(--color-border-soft)] bg-[color:var(--color-header)]">
         <Container className="py-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-          <div>
-            <div className="text-sm font-semibold">FluxoCerto</div>
-            <div className="mt-1 text-xs text-white/60">© {new Date().getFullYear()} • {PRODUCT.tagline}</div>
+          <div className="flex items-center justify-between sm:justify-start gap-4">
+            <ThemeToggle />
           </div>
-          <div className="flex items-center gap-4 text-sm text-white/70">
-            <a className="hover:text-white" href="#preco">
+          <div className="flex items-center gap-4 text-sm text-[color:var(--color-dim-foreground)]">
+            <a className="hover:text-[color:var(--color-foreground)]" href="#preco">
               Preço
             </a>
-            <a className="hover:text-white" href="#faq">
+            <a className="hover:text-[color:var(--color-foreground)]" href="#faq">
               FAQ
             </a>
           </div>

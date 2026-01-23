@@ -1,18 +1,44 @@
 @import "tailwindcss";
 
-@theme {
+:root {
+  /* Theme preference:
+     - default is "system" (no localStorage key) handled in index.html + JS hook
+     - when dark, html has class="dark" */
+  color-scheme: light;
+
   --color-brand-snow: #f8fafd;
   --color-brand-blue: #40b5e8;
   --color-brand-ink: #26284b;
   --color-brand-blue-ui: #0369a1;
 
-  --color-background: #0b1020;
-  --color-foreground: #eef4ff;
-  --color-muted-foreground: rgba(238, 244, 255, 0.72);
+  /* Light theme tokens */
+  --color-background: #f8fafd;
+  --color-foreground: #0b1020;
+  --color-muted-foreground: rgba(11, 16, 32, 0.72);
+  --color-dim-foreground: rgba(11, 16, 32, 0.62);
+  --color-faint-foreground: rgba(11, 16, 32, 0.52);
 
-  --color-card: rgba(255, 255, 255, 0.06);
-  --color-card-foreground: #eef4ff;
-  --color-border: rgba(255, 255, 255, 0.12);
+  --color-card: rgba(11, 16, 32, 0.04);
+  --color-card-foreground: #0b1020;
+  --color-border: rgba(11, 16, 32, 0.14);
+  --color-border-soft: rgba(11, 16, 32, 0.10);
+
+  --color-surface-1: rgba(11, 16, 32, 0.03);
+  --color-surface-2: rgba(11, 16, 32, 0.05);
+  --color-surface-3: rgba(11, 16, 32, 0.08);
+  --color-surface-4: rgba(11, 16, 32, 0.11);
+  --color-header: rgba(248, 250, 253, 0.72);
+  --color-inset: rgba(11, 16, 32, 0.05);
+  --color-divider: rgba(11, 16, 32, 0.14);
+  --color-overlay: rgba(11, 16, 32, 0.06);
+
+  --fc-bg-linear-0: #ffffff;
+  --fc-bg-linear-1: #f8fafd;
+  --fc-bg-linear-2: #f1f5f9;
+  --fc-glow-blue: rgba(64, 181, 232, 0.14);
+  --fc-glow-indigo: rgba(99, 102, 241, 0.10);
+  --fc-glow-emerald: rgba(16, 185, 129, 0.08);
+  --fc-grain-dot: rgba(11, 16, 32, 0.06);
 
   --color-primary: var(--color-brand-blue);
   --color-primary-foreground: #071018;
@@ -20,12 +46,55 @@
   --radius: 0.9rem;
 }
 
-:root {
+html.dark {
   color-scheme: dark;
+
+  /* Dark theme tokens (current design) */
+  --color-background: #0b1020;
+  --color-foreground: #eef4ff;
+  --color-muted-foreground: rgba(238, 244, 255, 0.72);
+  --color-dim-foreground: rgba(238, 244, 255, 0.62);
+  --color-faint-foreground: rgba(238, 244, 255, 0.52);
+
+  --color-card: rgba(255, 255, 255, 0.06);
+  --color-card-foreground: #eef4ff;
+  --color-border: rgba(255, 255, 255, 0.12);
+  --color-border-soft: rgba(255, 255, 255, 0.08);
+
+  --color-surface-1: rgba(255, 255, 255, 0.05);
+  --color-surface-2: rgba(255, 255, 255, 0.06);
+  --color-surface-3: rgba(255, 255, 255, 0.10);
+  --color-surface-4: rgba(255, 255, 255, 0.14);
+  --color-header: rgba(0, 0, 0, 0.15);
+  --color-inset: rgba(0, 0, 0, 0.25);
+  --color-divider: rgba(255, 255, 255, 0.10);
+  --color-overlay: rgba(0, 0, 0, 0.34);
+
+  --fc-bg-linear-0: #070a12;
+  --fc-bg-linear-1: #0b1020;
+  --fc-bg-linear-2: #070a12;
+  --fc-glow-blue: rgba(64, 181, 232, 0.18);
+  --fc-glow-indigo: rgba(99, 102, 241, 0.16);
+  --fc-glow-emerald: rgba(16, 185, 129, 0.10);
+  --fc-grain-dot: rgba(255, 255, 255, 0.06);
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Theme-aware logo swap (do NOT rely on Tailwind's `dark:` variant to avoid media/class mismatches) */
+.fc-logo-light {
+  display: block;
+}
+.fc-logo-dark {
+  display: none;
+}
+html.dark .fc-logo-light {
+  display: none;
+}
+html.dark .fc-logo-dark {
+  display: block;
 }
 
 * {
@@ -40,7 +109,7 @@ body {
 body {
   /* Base canvas color. Gradient lives in a fixed pseudo-element so it doesn't "reset"
      or depend on the document height (which can feel odd between sections). */
-  background: #070a12;
+  background: var(--fc-bg-linear-0);
   color: var(--color-foreground);
   position: relative;
   z-index: 0;
@@ -53,15 +122,15 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(1200px 800px at 18% 12%, rgba(64, 181, 232, 0.18), rgba(0, 0, 0, 0) 58%),
-    radial-gradient(900px 700px at 78% 14%, rgba(99, 102, 241, 0.16), rgba(0, 0, 0, 0) 58%),
-    radial-gradient(900px 700px at 55% 92%, rgba(16, 185, 129, 0.10), rgba(0, 0, 0, 0) 62%),
-    linear-gradient(180deg, #070a12, #0b1020 45%, #070a12);
+    radial-gradient(1200px 800px at 18% 12%, var(--fc-glow-blue), rgba(0, 0, 0, 0) 58%),
+    radial-gradient(900px 700px at 78% 14%, var(--fc-glow-indigo), rgba(0, 0, 0, 0) 58%),
+    radial-gradient(900px 700px at 55% 92%, var(--fc-glow-emerald), rgba(0, 0, 0, 0) 62%),
+    linear-gradient(180deg, var(--fc-bg-linear-0), var(--fc-bg-linear-1) 45%, var(--fc-bg-linear-2));
 }
 
 /* Subtle grain (no images) */
 .fc-grain {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-image: radial-gradient(var(--fc-grain-dot) 1px, transparent 1px);
   background-size: 22px 22px;
   /* No fade: the grain should run all the way until the wrapper ends (end of "Como funciona"). */
   mask-image: none;

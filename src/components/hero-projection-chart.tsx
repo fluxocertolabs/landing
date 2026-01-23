@@ -259,7 +259,7 @@ export function HeroProjectionChart({ className }: { className?: string }) {
           height="18"
           patternUnits="userSpaceOnUse"
         >
-          <path d="M 28 0 L 0 0 0 18" fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="1" />
+          <path d="M 28 0 L 0 0 0 18" fill="none" stroke="var(--color-border)" strokeWidth="1" />
         </pattern>
       </defs>
 
@@ -325,7 +325,7 @@ export function HeroProjectionChart({ className }: { className?: string }) {
             x2={cursor.x}
             y1="0"
             y2="112"
-            stroke={isInDangerZone ? 'rgba(239,68,68,0.45)' : 'rgba(255,255,255,0.10)'}
+            stroke={isInDangerZone ? 'rgba(239,68,68,0.45)' : 'var(--color-border)'}
             strokeWidth="1"
             opacity={markerOpacity}
           />

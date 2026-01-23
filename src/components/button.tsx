@@ -21,8 +21,9 @@ export function Button({ className, variant = 'primary', size = 'md', ...props }
         variant === 'primary' &&
           'bg-[linear-gradient(135deg,rgba(64,181,232,1),rgba(99,102,241,0.95))] text-[color:var(--color-primary-foreground)] shadow-[0_10px_30px_rgba(64,181,232,0.18)] hover:brightness-[1.03] hover:shadow-[0_14px_44px_rgba(64,181,232,0.22)] hover:-translate-y-[1px]',
         variant === 'secondary' &&
-          'bg-white/10 text-[color:var(--color-foreground)] border border-white/12 hover:bg-white/16 hover:border-white/18 hover:-translate-y-[1px] hover:shadow-[0_12px_40px_rgba(0,0,0,0.32)]',
-        variant === 'ghost' && 'bg-transparent text-[color:var(--color-foreground)] hover:bg-white/6',
+          'bg-[color:var(--color-surface-3)] text-[color:var(--color-foreground)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-4)] hover:-translate-y-[1px] hover:shadow-[0_12px_40px_rgba(0,0,0,0.18)]',
+        variant === 'ghost' &&
+          'bg-transparent text-[color:var(--color-foreground)] hover:bg-[color:var(--color-surface-2)]',
         'active:translate-y-[1px]',
         className
       )}
