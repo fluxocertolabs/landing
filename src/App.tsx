@@ -16,6 +16,7 @@ import { HeroProjectionChart } from '@/components/hero-projection-chart'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { cn } from '@/lib/cn'
 import { LINKS, PRICING, PRODUCT } from '@/content'
+import { captureEvent } from '@/lib/analytics/posthog'
 
 function Container({ className, children }: { className?: string; children: React.ReactNode }) {
   return (
@@ -64,7 +65,12 @@ function CtaButtons() {
     <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
       {hasAppUrl ? (
         <a href={LINKS.appUrl}>
-          <Button size="lg">
+          <Button
+            size="lg"
+            onClick={() =>
+              captureEvent('landing_cta_clicked', { placement: 'header', action: 'start_trial', href: LINKS.appUrl })
+            }
+          >
             Começar teste grátis
             <ArrowRight className="h-4 w-4 opacity-90" aria-hidden="true" />
           </Button>
@@ -78,7 +84,11 @@ function CtaButtons() {
 
       {hasAppUrl ? (
         <a href={LINKS.appUrl}>
-          <Button variant="secondary" size="lg">
+          <Button
+            variant="secondary"
+            size="lg"
+            onClick={() => captureEvent('landing_cta_clicked', { placement: 'header', action: 'login', href: LINKS.appUrl })}
+          >
             Entrar
           </Button>
         </a>
@@ -98,7 +108,12 @@ function SingleCtaButton() {
     <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
       {hasAppUrl ? (
         <a href={LINKS.appUrl}>
-          <Button size="lg">
+          <Button
+            size="lg"
+            onClick={() =>
+              captureEvent('landing_cta_clicked', { placement: 'pricing', action: 'start_trial', href: LINKS.appUrl })
+            }
+          >
             Começar teste grátis
             <ArrowRight className="h-4 w-4 opacity-90" aria-hidden="true" />
           </Button>
@@ -120,7 +135,13 @@ function HeroCtaButton() {
     <div className="flex">
       {hasAppUrl ? (
         <a href={LINKS.appUrl}>
-          <Button size="lg" className="fc-hero-cta">
+          <Button
+            size="lg"
+            className="fc-hero-cta"
+            onClick={() =>
+              captureEvent('landing_cta_clicked', { placement: 'hero', action: 'start_trial', href: LINKS.appUrl })
+            }
+          >
             Começar teste grátis
             <ArrowRight className="h-4 w-4 opacity-90" aria-hidden="true" />
           </Button>
