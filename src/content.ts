@@ -2,7 +2,7 @@ export const PRODUCT = {
   name: 'FluxoCerto',
   tagline: 'Projeção de fluxo de caixa para renda variável',
   subtagline:
-    'Veja seus próximos 30/60/90 dias em dois cenários (otimista e pessimista) e descubra dias de risco antes de entrar no negativo.',
+    'Para freelancers, autônomos e comissionados. Veja seus próximos 90 dias em dois cenários e descubra se você pode gastar hoje sem quebrar amanhã.',
 }
 
 export const PRICING = {

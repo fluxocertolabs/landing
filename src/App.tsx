@@ -1,12 +1,15 @@
 import { motion, useReducedMotion } from 'motion/react'
 import {
   ArrowRight,
+  Briefcase,
   CalendarClock,
   Check,
   CircleAlert,
+  Coins,
   Layers,
   ShieldCheck,
   Sparkles,
+  Stethoscope,
   TrendingDown,
 } from 'lucide-react'
 import { Button } from '@/components/button'
@@ -44,6 +47,20 @@ function Feature({ icon, title, desc }: { icon: React.ReactNode; title: string; 
           <div className="text-sm font-semibold tracking-tight">{title}</div>
           <div className="mt-1 text-sm text-[color:var(--color-muted-foreground)]">{desc}</div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+function UseCaseCard({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
+  return (
+    <div className="flex flex-col gap-3 rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface-1)] p-5">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--color-surface-2)] text-[color:var(--color-brand-blue)]">
+        {icon}
+      </div>
+      <div>
+        <div className="font-semibold text-[color:var(--color-foreground)]">{title}</div>
+        <div className="mt-1 text-sm text-[color:var(--color-muted-foreground)]">{desc}</div>
       </div>
     </div>
   )
@@ -306,6 +323,28 @@ export function App() {
             </Container>
           </section>
 
+          <section className="border-b border-[color:var(--color-border-soft)] bg-[color:var(--color-surface-2)]/30 py-10">
+            <Container>
+              <div className="grid gap-4 md:grid-cols-3">
+                <UseCaseCard
+                  icon={<Coins className="h-5 w-5" />}
+                  title="Corretores e Vendas"
+                  desc="Fechou um contrato grande? Saiba exatamente até quando a comissão vai durar antes da próxima venda."
+                />
+                <UseCaseCard
+                  icon={<Stethoscope className="h-5 w-5" />}
+                  title="Saúde e Liberais"
+                  desc="Controle repasses de convênios, plantões e atendimentos particulares em uma visão unificada."
+                />
+                <UseCaseCard
+                  icon={<Briefcase className="h-5 w-5" />}
+                  title="Freelancers e PJs"
+                  desc="Pare de misturar dinheiro da empresa com pessoal. Saiba seu pró-labore real mês a mês."
+                />
+              </div>
+            </Container>
+          </section>
+
           <section id="como-funciona" className="pt-10 pb-14 sm:pt-12 sm:pb-18">
             <Container>
               <Reveal>
@@ -505,7 +544,7 @@ export function App() {
               <Reveal delay={0.06}>
                 <FaqItem
                   q="Para quem isso é ideal?"
-                  a="Grupos e pessoas com renda variável (freela, PJ, comissão) que precisam saber se o dinheiro vai estar lá quando as contas vencerem."
+                  a="Corretores, médicos, dentistas, freelancers, advogados e qualquer profissional que não tem salário fixo no dia 5."
                 />
               </Reveal>
               <Reveal delay={0.09}>
