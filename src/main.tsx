@@ -6,8 +6,13 @@ import { PostHogProvider } from 'posthog-js/react'
 import { App } from '@/App'
 import '@/index.css'
 import { initPosthog } from '@/lib/analytics/posthog'
+import { hasMetaPixelConsent, initMetaPixel, metaTrack } from '@/lib/analytics/meta-pixel'
 
 initPosthog()
+if (hasMetaPixelConsent()) {
+  initMetaPixel()
+  metaTrack('PageView')
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
