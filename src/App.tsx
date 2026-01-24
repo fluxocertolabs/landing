@@ -6,6 +6,8 @@ import {
   Check,
   CircleAlert,
   Coins,
+  Facebook,
+  Instagram,
   Layers,
   ShieldCheck,
   Sparkles,
@@ -579,16 +581,55 @@ export function App() {
       </main>
 
       <footer className="border-t border-[color:var(--color-border-soft)] bg-[color:var(--color-header)]">
-        <Container className="py-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-          <div className="flex items-center justify-between sm:justify-start gap-4">
-            <ThemeToggle />
+        <Container className="py-10 flex flex-col gap-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+            <div className="flex items-center justify-between sm:justify-start gap-4">
+              <ThemeToggle />
+            </div>
+            <div className="flex items-center gap-4 text-sm text-[color:var(--color-dim-foreground)]">
+              <a className="hover:text-[color:var(--color-foreground)]" href="#preco">
+                Preço
+              </a>
+              <a className="hover:text-[color:var(--color-foreground)]" href="#faq">
+                FAQ
+              </a>
+            </div>
           </div>
-          <div className="flex items-center gap-4 text-sm text-[color:var(--color-dim-foreground)]">
-            <a className="hover:text-[color:var(--color-foreground)]" href="#preco">
-              Preço
+
+          <div className="flex items-center justify-center gap-2">
+            <a
+              className={cn(
+                'inline-flex h-9 w-9 items-center justify-center rounded-lg cursor-pointer',
+                'text-[color:var(--color-dim-foreground)] hover:text-[color:var(--color-foreground)]',
+                'transition-[color,opacity,transform] duration-200',
+                'hover:opacity-90 hover:-translate-y-[1px]',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(64,181,232,0.55)] focus-visible:ring-offset-0',
+                'active:translate-y-[1px]'
+              )}
+              href="https://instagram.com/meufluxocerto"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              title="Instagram"
+            >
+              <Instagram className="h-4 w-4" aria-hidden="true" />
             </a>
-            <a className="hover:text-[color:var(--color-foreground)]" href="#faq">
-              FAQ
+            <a
+              className={cn(
+                'inline-flex h-9 w-9 items-center justify-center rounded-lg cursor-pointer',
+                'text-[color:var(--color-dim-foreground)] hover:text-[color:var(--color-foreground)]',
+                'transition-[color,opacity,transform] duration-200',
+                'hover:opacity-90 hover:-translate-y-[1px]',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(64,181,232,0.55)] focus-visible:ring-offset-0',
+                'active:translate-y-[1px]'
+              )}
+              href="https://www.facebook.com/profile.php?id=61587100917870"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+              title="Facebook"
+            >
+              <Facebook className="h-4 w-4" aria-hidden="true" />
             </a>
           </div>
         </Container>
