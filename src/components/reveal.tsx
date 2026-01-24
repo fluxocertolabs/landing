@@ -15,6 +15,16 @@ export function Reveal({ children, className, delay = 0 }: Props) {
     const el = ref.current
     if (!el) return
 
+    // Safari can miss the initial IntersectionObserver callback when observing an element
+    // that is already in view (this becomes very visible in React StrictMode remounts).
+    // Do a cheap synchronous viewport check as a fallback so content doesn't get stuck hidden.
+    const rect = el.getBoundingClientRect()
+    const vh = window.innerHeight || document.documentElement.clientHeight
+    if (rect.top < vh * 0.98 && rect.bottom > vh * 0.02) {
+      setIsInView(true)
+      return
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0]
