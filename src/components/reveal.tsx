@@ -15,12 +15,19 @@ export function Reveal({ children, className, delay = 0 }: Props) {
     const el = ref.current
     if (!el) return
 
+    let raf = 0
+    let timeout = 0
+
     // Safari can miss the initial IntersectionObserver callback when observing an element
     // that is already in view (this becomes very visible in React StrictMode remounts).
     // Do a cheap synchronous viewport check as a fallback so content doesn't get stuck hidden.
-    const rect = el.getBoundingClientRect()
-    const vh = window.innerHeight || document.documentElement.clientHeight
-    if (rect.top < vh * 0.98 && rect.bottom > vh * 0.02) {
+    const checkInView = () => {
+      const rect = el.getBoundingClientRect()
+      const vh = window.innerHeight || document.documentElement.clientHeight
+      return rect.top < vh * 0.98 && rect.bottom > vh * 0.02
+    }
+
+    if (checkInView()) {
       setIsInView(true)
       return
     }
@@ -38,7 +45,27 @@ export function Reveal({ children, className, delay = 0 }: Props) {
     )
 
     observer.observe(el)
-    return () => observer.disconnect()
+
+    // Safari (esp. mobile) can report incorrect rects in the same tick as mount/scroll.
+    // Re-check on the next frame to catch elements that are already in view.
+    raf = window.requestAnimationFrame(() => {
+      if (checkInView()) {
+        setIsInView(true)
+        observer.disconnect()
+      }
+    })
+
+    // Fail-open: never leave content hidden if IO fails to fire for any reason.
+    timeout = window.setTimeout(() => {
+      setIsInView(true)
+      observer.disconnect()
+    }, 1200)
+
+    return () => {
+      observer.disconnect()
+      if (raf) window.cancelAnimationFrame(raf)
+      if (timeout) window.clearTimeout(timeout)
+    }
   }, [])
 
   return (
