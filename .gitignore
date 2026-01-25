@@ -31,3 +31,5 @@ vite.config.js
 vite.config.d.ts
 
 
+# Local-only debug artifacts
+.cursor/
