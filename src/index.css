@@ -145,8 +145,9 @@ body {
   z-index: 0;
 }
 
-body::before {
-  content: '';
+/* Fixed background layer is rendered as a real DOM element (see App),
+   because Safari can miscompute scroll metrics when using `body::before { position: fixed; }`. */
+.fc-fixed-bg {
   position: fixed;
   inset: 0;
   z-index: -1;
@@ -156,6 +157,17 @@ body::before {
     radial-gradient(900px 700px at 78% 14%, var(--fc-glow-indigo), rgba(0, 0, 0, 0) 58%),
     radial-gradient(900px 700px at 55% 92%, var(--fc-glow-emerald), rgba(0, 0, 0, 0) 62%),
     linear-gradient(180deg, var(--fc-bg-linear-0), var(--fc-bg-linear-1) 45%, var(--fc-bg-linear-2));
+}
+
+/* Debug toggle: disable fixed gradient layer (helps isolate Safari compositing issues) */
+body[data-fc-no-fixed-bg="1"] .fc-fixed-bg {
+  display: none !important;
+}
+
+/* Debug toggle: disable backdrop blur on header (helps isolate Safari compositing issues) */
+body[data-fc-no-blur="1"] header {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
 }
 
 /* Subtle grain (no images) */

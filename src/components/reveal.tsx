@@ -11,22 +11,25 @@ export function Reveal({ children, className, delay = 0 }: Props) {
   const instanceId = useRef<string>(
     `r_${Math.random().toString(16).slice(2)}_${Math.random().toString(16).slice(2)}`
   )
+  const isSafari =
+    typeof navigator !== 'undefined' &&
+    /Safari/i.test(navigator.userAgent) &&
+    !/(Chrome|Chromium|CriOS|FxiOS|EdgiOS|OPiOS)/i.test(navigator.userAgent)
   const shouldReduce = useReducedMotion()
   const [isInView, setIsInView] = useState(false)
+  const [forceVisible, setForceVisible] = useState(false)
 
   useEffect(() => {
     const el = ref.current
     if (!el) return
 
     let raf = 0
-    let timeout = 0
 
-    const rect0 = el.getBoundingClientRect()
-    const vh0 = window.innerHeight || document.documentElement.clientHeight
-    const inView0 = rect0.top < vh0 * 0.98 && rect0.bottom > vh0 * 0.02
-    // #region agent log
-    fetch('http://localhost:7249/ingest/72fc49e3-14d9-4dc7-b1c1-81c23f0976db',{method:'POST',mode:'no-cors',body:JSON.stringify({location:'src/components/reveal.tsx:effect',message:'Reveal mount/effect',data:{delay,shouldReduce,inView0,rect0:{top:rect0.top,bottom:rect0.bottom,height:rect0.height},vh:vh0,ua:navigator.userAgent},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-    // #endregion
+  // Initial in-view check; used to avoid leaving content hidden if already visible.
+  const rect0 = el.getBoundingClientRect()
+  const vh0 = window.innerHeight || document.documentElement.clientHeight
+  const inView0 = rect0.top < vh0 * 0.98 && rect0.bottom > vh0 * 0.02
+  void inView0
 
     // Safari can miss the initial IntersectionObserver callback when observing an element
     // that is already in view (this becomes very visible in React StrictMode remounts).
@@ -46,9 +49,6 @@ export function Reveal({ children, className, delay = 0 }: Props) {
       (entries) => {
         const entry = entries[0]
         if (!entry) return
-        // #region agent log
-        fetch('http://localhost:7249/ingest/72fc49e3-14d9-4dc7-b1c1-81c23f0976db',{method:'POST',mode:'no-cors',body:JSON.stringify({location:'src/components/reveal.tsx:io',message:'Reveal IO callback',data:{isIntersecting:entry.isIntersecting,ratio:entry.intersectionRatio,rect:{top:entry.boundingClientRect?.top,bottom:entry.boundingClientRect?.bottom,height:entry.boundingClientRect?.height},root:entry.rootBounds?{top:entry.rootBounds.top,bottom:entry.rootBounds.bottom,height:entry.rootBounds.height}:null},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
         if (entry.isIntersecting) {
           setIsInView(true)
           observer.disconnect()
@@ -68,30 +68,79 @@ export function Reveal({ children, className, delay = 0 }: Props) {
       }
     })
 
-    // Fail-open: never leave content hidden if IO fails to fire for any reason.
-    timeout = window.setTimeout(() => {
-      setIsInView(true)
-      observer.disconnect()
-    }, 1200)
-
     return () => {
-      // #region agent log
-      fetch('http://localhost:7249/ingest/72fc49e3-14d9-4dc7-b1c1-81c23f0976db',{method:'POST',mode:'no-cors',body:JSON.stringify({location:'src/components/reveal.tsx:cleanup',message:'Reveal cleanup/unmount',data:{isInViewAtCleanup:isInView},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-      // #endregion
       observer.disconnect()
       if (raf) window.cancelAnimationFrame(raf)
-      if (timeout) window.clearTimeout(timeout)
     }
   }, [])
 
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const cs = window.getComputedStyle(el)
-    // #region agent log
-    fetch('http://localhost:7249/ingest/72fc49e3-14d9-4dc7-b1c1-81c23f0976db',{method:'POST',mode:'no-cors',body:JSON.stringify({location:'src/components/reveal.tsx:isInView',message:'Reveal isInView changed',data:{isInView,opacity:cs.opacity,display:cs.display,visibility:cs.visibility,transform:cs.transform},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-    // #endregion
+    window.getComputedStyle(el)
   }, [isInView])
+
+  useEffect(() => {
+    if (!isInView || shouldReduce || forceVisible) return
+    const el = ref.current
+    if (!el) return
+
+    // Safari can sometimes keep Motion elements stuck at initial styles even after state flips.
+    // Verify next frame; if still hidden, force visible with a plain div render.
+    const raf = window.requestAnimationFrame(() => {
+      const node = ref.current
+      if (!node) return
+      const cs = window.getComputedStyle(node)
+      const opacity = Number(cs.opacity)
+      if (Number.isFinite(opacity) && opacity < 0.1) {
+        setForceVisible(true)
+      }
+    })
+
+    return () => window.cancelAnimationFrame(raf)
+  }, [forceVisible, isInView, shouldReduce])
+
+  useEffect(() => {
+    if (!forceVisible) return
+    const el = ref.current
+    if (!el) return
+    const raf = window.requestAnimationFrame(() => {
+      const node = ref.current
+      if (!node) return
+      window.getComputedStyle(node)
+    })
+    return () => window.cancelAnimationFrame(raf)
+  }, [forceVisible])
+
+  if (shouldReduce || isSafari || forceVisible) {
+    return (
+      <div
+        ref={ref}
+        className={className}
+        data-fc-reveal-id={instanceId.current}
+        data-fc-reveal-inview={isInView ? '1' : '0'}
+        style={
+          shouldReduce
+            ? undefined
+            : forceVisible
+              ? { opacity: 1, transform: 'none' }
+              : isSafari
+                ? {
+                    opacity: isInView ? 1 : 0,
+                    transform: isInView ? 'none' : 'translate3d(0, 18px, 0)',
+                    transitionProperty: 'opacity, transform',
+                    transitionDuration: '600ms',
+                    transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
+                    transitionDelay: `${delay}s`,
+                    willChange: 'opacity, transform',
+                  }
+                : undefined
+        }
+      >
+        {children}
+      </div>
+    )
+  }
 
   return (
     <motion.div
@@ -101,11 +150,7 @@ export function Reveal({ children, className, delay = 0 }: Props) {
       data-fc-reveal-inview={isInView ? '1' : '0'}
       initial={shouldReduce ? false : { opacity: 0, y: 18 }}
       animate={
-        shouldReduce
-          ? undefined
-          : isInView
-            ? { opacity: 1, y: 0 }
-            : { opacity: 0, y: 18 }
+        isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }
       }
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay }}
     >
