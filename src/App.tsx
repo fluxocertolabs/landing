@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import {
   ArrowRight,
@@ -178,8 +179,225 @@ function HeroCtaButton() {
 export function App() {
   const reduce = useReducedMotion()
 
+  const debugEnabled = useMemo(() => {
+    if (typeof window === 'undefined') return false
+    return new URLSearchParams(window.location.search).has('debug')
+  }, [])
+
+  const [debugPayload, setDebugPayload] = useState<unknown>(null)
+
+  useEffect(() => {
+    if (debugEnabled) {
+      // Make it extremely obvious which build/URL is running (helps avoid cached/old dist confusion).
+      document.title = `[DEBUG] ${document.title || 'FluxoCerto'}`
+    }
+
+    // #region agent log
+    fetch('http://localhost:7249/ingest/72fc49e3-14d9-4dc7-b1c1-81c23f0976db',{method:'POST',mode:'no-cors',body:JSON.stringify({location:'src/App.tsx:mount',message:'App mounted',data:{href:window.location.href,ua:navigator.userAgent,scrollY:window.scrollY,innerH:window.innerHeight,docH:document.documentElement.scrollHeight},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+    // #endregion
+
+    let reportedBottom = false
+    let lastFooterPresent = true
+
+    const root = document.getElementById('root')
+    const getFooter = () => document.querySelector('footer')
+    const getFaq = () => document.getElementById('faq')
+    const getFaqReveals = () => Array.from(document.querySelectorAll('#faq [data-fc-reveal-id]'))
+
+    const reportBottomState = (reason: string) => {
+      if (reportedBottom) return
+      const footer = getFooter()
+      const faq = getFaq()
+      const footerRect = footer?.getBoundingClientRect()
+      const footerCs = footer ? window.getComputedStyle(footer) : null
+      const faqRect = faq?.getBoundingClientRect()
+      const faqCs = faq ? window.getComputedStyle(faq) : null
+
+      const reveals = getFaqReveals().slice(0, 30).map((el) => {
+        const cs = window.getComputedStyle(el as Element)
+        return {
+          id: (el as HTMLElement).dataset.fcRevealId,
+          inView: (el as HTMLElement).dataset.fcRevealInview,
+          opacity: cs.opacity,
+          display: cs.display,
+          visibility: cs.visibility,
+          transform: cs.transform,
+        }
+      })
+
+      const ptX = Math.round(window.innerWidth / 2)
+      const ptY =
+        footerRect && footerRect.top < window.innerHeight
+          ? Math.round(Math.min(window.innerHeight - 2, Math.max(2, footerRect.top + 8)))
+          : Math.round(window.innerHeight - 2)
+      const topEl = document.elementFromPoint(ptX, ptY) as HTMLElement | null
+      const topElCs = topEl ? window.getComputedStyle(topEl) : null
+
+      const bodyBefore = window.getComputedStyle(document.body, '::before')
+
+      const payload = {
+        when: Date.now(),
+        href: window.location.href,
+        ua: navigator.userAgent,
+        reason,
+        scroll: {
+          y: window.scrollY,
+          innerH: window.innerHeight,
+          docH: document.documentElement.scrollHeight,
+        },
+        point: {
+          x: ptX,
+          y: ptY,
+          topEl: topEl
+            ? {
+                tag: topEl.tagName,
+                id: topEl.id || null,
+                className: topEl.className || null,
+                opacity: topElCs?.opacity,
+                display: topElCs?.display,
+                visibility: topElCs?.visibility,
+                position: topElCs?.position,
+                zIndex: topElCs?.zIndex,
+              }
+            : null,
+        },
+        bodyBefore: {
+          display: bodyBefore.display,
+          position: bodyBefore.position,
+          zIndex: bodyBefore.zIndex,
+          opacity: bodyBefore.opacity,
+          pointerEvents: bodyBefore.pointerEvents,
+          backgroundImage: bodyBefore.backgroundImage?.slice(0, 140) ?? null,
+        },
+        footer: {
+          present: !!footer,
+          opacity: footerCs?.opacity,
+          display: footerCs?.display,
+          visibility: footerCs?.visibility,
+          rect: footerRect ? { top: footerRect.top, bottom: footerRect.bottom, height: footerRect.height } : null,
+        },
+        faq: {
+          present: !!faq,
+          opacity: faqCs?.opacity,
+          display: faqCs?.display,
+          visibility: faqCs?.visibility,
+          rect: faqRect ? { top: faqRect.top, bottom: faqRect.bottom, height: faqRect.height } : null,
+          revealCount: getFaqReveals().length,
+          reveals,
+        },
+      }
+
+      if (debugEnabled) setDebugPayload(payload)
+
+      // #region agent log
+      fetch('http://localhost:7249/ingest/72fc49e3-14d9-4dc7-b1c1-81c23f0976db',{method:'POST',mode:'no-cors',body:JSON.stringify({location:'src/App.tsx:bottom',message:'Bottom/FAQ/Footer state',data:{reason,scrollY:window.scrollY,innerH:window.innerHeight,docH:document.documentElement.scrollHeight,footer:{present:!!footer,opacity:footerCs?.opacity,display:footerCs?.display,visibility:footerCs?.visibility,rect:footerRect?{top:footerRect.top,bottom:footerRect.bottom,height:footerRect.height}:null},faq:{present:!!faq,opacity:faqCs?.opacity,display:faqCs?.display,visibility:faqCs?.visibility,rect:faqRect?{top:faqRect.top,bottom:faqRect.bottom,height:faqRect.height}:null}},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+      // #endregion
+      reportedBottom = true
+    }
+
+    const onScroll = () => {
+      const docH = document.documentElement.scrollHeight
+      const nearBottom = window.scrollY + window.innerHeight >= docH - 80
+      if (nearBottom) reportBottomState('near_bottom_scroll')
+    }
+
+    const mo =
+      root &&
+      new MutationObserver(() => {
+        const footerPresent = !!getFooter()
+        if (lastFooterPresent && !footerPresent) {
+          // #region agent log
+          fetch('http://localhost:7249/ingest/72fc49e3-14d9-4dc7-b1c1-81c23f0976db',{method:'POST',mode:'no-cors',body:JSON.stringify({location:'src/App.tsx:mutation',message:'Footer disappeared from DOM',data:{scrollY:window.scrollY,innerH:window.innerHeight,docH:document.documentElement.scrollHeight},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+          // #endregion
+        }
+        lastFooterPresent = footerPresent
+      })
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    mo?.observe(root, { childList: true, subtree: true })
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      mo?.disconnect()
+    }
+  }, [debugEnabled])
+
   return (
     <div id="top" className="min-h-screen">
+      {debugEnabled ? (
+        <>
+          <div
+            style={{
+              position: 'fixed',
+              top: 10,
+              left: 10,
+              zIndex: 2147483647,
+              background: '#ff0033',
+              color: '#ffffff',
+              padding: '6px 10px',
+              borderRadius: 8,
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: '0.02em',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.35)',
+            }}
+          >
+            DEBUG ENABLED (?debug=1)
+          </div>
+
+          <div
+            style={{
+              position: 'fixed',
+              bottom: 12,
+              right: 12,
+              zIndex: 2147483647,
+              width: 'min(92vw, 520px)',
+              borderRadius: 12,
+              border: '1px solid rgba(255,255,255,0.18)',
+              background: 'rgba(10,12,18,0.92)',
+              color: '#ffffff',
+              padding: 10,
+              fontSize: 12,
+              boxShadow: '0 20px 80px rgba(0,0,0,0.45)',
+            }}
+          >
+          <div className="flex items-center justify-between gap-3">
+            <div className="font-semibold">Debug (Safari disappearance)</div>
+            <button
+              type="button"
+              style={{
+                borderRadius: 8,
+                border: '1px solid rgba(255,255,255,0.18)',
+                background: 'rgba(255,255,255,0.08)',
+                color: '#fff',
+                padding: '6px 10px',
+                cursor: 'pointer',
+                fontWeight: 600,
+              }}
+              onClick={() => {
+                const text = JSON.stringify(debugPayload ?? { note: 'No payload captured yet' }, null, 2)
+                navigator.clipboard?.writeText(text).catch(() => {})
+              }}
+            >
+              Copy
+            </button>
+          </div>
+          <div
+            style={{
+              marginTop: 8,
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
+              maxHeight: '42vh',
+              overflow: 'auto',
+              color: 'rgba(255,255,255,0.82)',
+            }}
+          >
+            {debugPayload ? JSON.stringify(debugPayload, null, 2) : 'Scroll to bottom until it disappears; this panel will capture state.'}
+          </div>
+          </div>
+        </>
+      ) : null}
+
       <header className="sticky top-0 z-20 border-b border-[color:var(--color-border-soft)] bg-[color:var(--color-header)] backdrop-blur">
         <Container className="flex items-center justify-between py-4 sm:py-5">
           <a
