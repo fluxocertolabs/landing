@@ -78,17 +78,23 @@ function FaqItem({ q, a }: { q: string; a: string }) {
   )
 }
 
+function getIntentUrl(intent: 'signup' | 'login') {
+  return new URL(`/login?intent=${intent}`, LINKS.appUrl).toString()
+}
+
 function CtaButtons() {
   const hasAppUrl = LINKS.appUrl.trim().length > 0
+  const signupUrl = getIntentUrl('signup')
+  const loginUrl = getIntentUrl('login')
 
   return (
     <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
       {hasAppUrl ? (
-        <a href={LINKS.appUrl}>
+        <a href={signupUrl}>
           <Button
             size="lg"
             onClick={() =>
-              captureEvent('landing_cta_clicked', { placement: 'header', action: 'start_trial', href: LINKS.appUrl })
+              captureEvent('landing_cta_clicked', { placement: 'header', action: 'start_trial', href: signupUrl })
             }
           >
             Começar teste grátis
@@ -103,11 +109,11 @@ function CtaButtons() {
       )}
 
       {hasAppUrl ? (
-        <a href={LINKS.appUrl}>
+        <a href={loginUrl}>
           <Button
             variant="secondary"
             size="lg"
-            onClick={() => captureEvent('landing_cta_clicked', { placement: 'header', action: 'login', href: LINKS.appUrl })}
+            onClick={() => captureEvent('landing_cta_clicked', { placement: 'header', action: 'login', href: loginUrl })}
           >
             Entrar
           </Button>
@@ -123,15 +129,16 @@ function CtaButtons() {
 
 function SingleCtaButton() {
   const hasAppUrl = LINKS.appUrl.trim().length > 0
+  const signupUrl = getIntentUrl('signup')
 
   return (
     <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
       {hasAppUrl ? (
-        <a href={LINKS.appUrl}>
+        <a href={signupUrl}>
           <Button
             size="lg"
             onClick={() =>
-              captureEvent('landing_cta_clicked', { placement: 'pricing', action: 'start_trial', href: LINKS.appUrl })
+              captureEvent('landing_cta_clicked', { placement: 'pricing', action: 'start_trial', href: signupUrl })
             }
           >
             Começar teste grátis
@@ -150,16 +157,17 @@ function SingleCtaButton() {
 
 function HeroCtaButton() {
   const hasAppUrl = LINKS.appUrl.trim().length > 0
+  const signupUrl = getIntentUrl('signup')
 
   return (
     <div className="flex">
       {hasAppUrl ? (
-        <a href={LINKS.appUrl}>
+        <a href={signupUrl}>
           <Button
             size="lg"
             className="fc-hero-cta"
             onClick={() =>
-              captureEvent('landing_cta_clicked', { placement: 'hero', action: 'start_trial', href: LINKS.appUrl })
+              captureEvent('landing_cta_clicked', { placement: 'hero', action: 'start_trial', href: signupUrl })
             }
           >
             Começar teste grátis
